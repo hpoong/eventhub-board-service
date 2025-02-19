@@ -18,7 +18,7 @@ public class KafkaConsumer {
             concurrency = "1"
     )
     public void listen(ConsumerRecord<String, String> message) {
-        log.info("email-service ::: {}", message.value());
+        log.info("email-service ::::: {}", message.value());
     }
 
 }
