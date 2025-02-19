@@ -1,0 +1,46 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+
+	implementation project(':core-service')
+
+
+	// springframework
+	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'	// jpa
+
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	// database
+	runtimeOnly 'com.mysql:mysql-connector-j' // mysql
+
+	// log
+	implementation group: 'com.github.gavlyukovskiy', name: 'p6spy-spring-boot-starter', version: '1.9.1'
+
+	// swagger
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
+
+	// test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
