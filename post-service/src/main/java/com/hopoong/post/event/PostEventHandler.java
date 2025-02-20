@@ -1,6 +1,8 @@
 package com.hopoong.post.event;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hopoong.post.adapter.kafka.KafkaProducer;
+import com.hopoong.post.api.post.model.PostModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -15,9 +17,7 @@ public class PostEventHandler {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handlePostEvent(String event) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        kafkaProducer.sendMessage(event);
+    public void handlePostEvent(PostModel.CreateRequest event) throws JsonProcessingException {
+        kafkaProducer.publishPostEvent(event);
     }
-
 }

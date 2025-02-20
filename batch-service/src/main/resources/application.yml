@@ -1,15 +1,12 @@
 
 
 server:
-  port: 9000
-
+  port: 9300
 
 logging:
   config: classpath:logback/logback-srping.xml
   level:
     root: info
-
-
 
 
 spring:
@@ -25,22 +22,3 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: -1
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: localpw
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      timeout: 60000
-      connect-timeout: 60000

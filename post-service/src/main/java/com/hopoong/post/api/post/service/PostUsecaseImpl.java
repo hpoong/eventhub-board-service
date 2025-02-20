@@ -16,13 +16,12 @@ public class PostUsecaseImpl implements PostUsecase {
     private final PostJpaRepository postJpaRepository;
 
 
-
     @Override
     @Transactional
     public void create(PostModel.CreateRequest createRequest) {
-//        Post post = Post.createPost(createRequest.userId(), createRequest.title(), createRequest.content(), createRequest.categoryId());
-//        postJpaRepository.save(post);
-        eventPublisher.publishEvent(createRequest.toString());
+        Post postEntity = Post.createPost(createRequest.userId(), createRequest.title(), createRequest.content(), createRequest.categoryId());
+        postJpaRepository.save(postEntity);
+        eventPublisher.publishEvent(createRequest);
     }
 
     @Override
