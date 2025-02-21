@@ -21,7 +21,7 @@ public class PopularPostsSchedule {
      * ✅ 10분마다 인기 게시글을 조회하여 DB에 저장
      */
     @Scheduled(fixedRate = 600000) // 10분마다 실행
-    public void fetchPopularPosts() throws JsonProcessingException {
+    public void fetchPopularPosts() {
         List<PopularPostModel.TrendingPostModel> message = popularPostService.findTop100ByOrderByViewsDesc();
         popularPostEventHandler.handleFetchPopularPostsEvent(message);
     }

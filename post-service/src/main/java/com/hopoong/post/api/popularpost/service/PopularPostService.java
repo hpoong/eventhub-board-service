@@ -27,21 +27,24 @@ public class PopularPostService {
 
     @Transactional(readOnly = true)
     public List<PopularPostModel.TrendingPostModel> findTop100ByOrderByViewsDesc() {
-        List<Post> top100ByOrderByViewsDesc = postJpaRepository.findTop100ByOrderByViewsDesc();
+        List<Object[]> top100ByOrderByViewsDesc = postJpaRepository.findTop100ByOrderByViewsDesc();
 
+        // id 0; category_id 1; content 2; created_at 3; title 4; updated_at 5; user_id 6; views 7; rn 8
         return Optional.ofNullable(top100ByOrderByViewsDesc)
                 .orElseGet(Collections::emptyList)
                 .stream()
-                .map(post -> new PopularPostModel.TrendingPostModel(
-                        post.getId(),
-                        post.getUserId(),
-                        post.getTitle(),
-                        post.getContent(),
-                        post.getCategoryId(),
-                        post.getViews()
+                .map(row -> new PopularPostModel.TrendingPostModel(
+                        ((Number) row[0]).longValue(),   // id
+                        ((Number) row[6]).longValue(),   // userId
+                        (String) row[4],                 // title
+                        (String) row[2],                 // content
+                        ((Number) row[1]).longValue(),   // categoryId
+                        ((Number) row[7]).intValue(),    // views
+                        ((Number) row[8]).longValue()    // rn
                 ))
                 .collect(Collectors.toList());
     }
+
 
 
     public void cachePopularPosts() {

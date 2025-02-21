@@ -14,7 +14,7 @@ public class PopularPostEventHandler {
 
     private final KafkaProducer kafkaProducer;
 
-    public void handleFetchPopularPostsEvent(List<PopularPostModel.TrendingPostModel> message) throws JsonProcessingException {
+    public void handleFetchPopularPostsEvent(List<PopularPostModel.TrendingPostModel> message) {
         kafkaProducer.publishPopularPostsEvent(message);
     }
 }

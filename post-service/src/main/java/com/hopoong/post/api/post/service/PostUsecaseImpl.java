@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 public class PostUsecaseImpl implements PostUsecase {
@@ -19,7 +21,9 @@ public class PostUsecaseImpl implements PostUsecase {
     @Override
     @Transactional
     public void create(PostModel.CreateRequest createRequest) {
-        Post postEntity = Post.createPost(createRequest.userId(), createRequest.title(), createRequest.content(), createRequest.categoryId());
+        Random random = new Random();
+        int randomNumber = random.nextInt(100000) + 1;
+        Post postEntity = Post.createPost(createRequest.userId(), createRequest.title(), createRequest.content(), createRequest.categoryId(), randomNumber);
         postJpaRepository.save(postEntity);
         eventPublisher.publishEvent(createRequest);
     }

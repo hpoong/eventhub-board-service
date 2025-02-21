@@ -41,13 +41,13 @@ public class Post { //  게시글
 
 
     // 게시글 생성 메서드 
-    public static Post createPost(Long userId, String title, String content, Long categoryId) {
+    public static Post createPost(Long userId, String title, String content, Long categoryId, int views) {
         Post post = new Post();
         post.userId = userId;
         post.title = title;
         post.content = content;
         post.categoryId = categoryId;
-        post.views = 0;
+        post.views = views;
         post.createdAt = LocalDateTime.now();
         post.updatedAt = LocalDateTime.now();
         return post;
