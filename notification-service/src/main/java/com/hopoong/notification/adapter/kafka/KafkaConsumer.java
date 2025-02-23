@@ -17,19 +17,11 @@ public class KafkaConsumer {
 
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(
-        topics = KafkaTopic.COMMENT,
-        groupId = "comment-topic-notification-group",
-        concurrency = "1"
-    )
-    public void consumeCommentNotification (ConsumerRecord<String, String> message) {
-        log.info("👍 댓글 알림: {}", message);
-    }
 
     @KafkaListener(
         topics = KafkaTopic.LIKE,
         groupId = "like-topic-notification-group",
-        concurrency = "1"
+        concurrency = "3"
     )
     public void consumeLikeNotification(ConsumerRecord<String, String> message) {
         log.info("👍 좋아요 알림: {}", message);
@@ -39,7 +31,7 @@ public class KafkaConsumer {
     @KafkaListener(
         topics = KafkaTopic.POST,
         groupId = "post-topic-notification-group",
-        concurrency = "1"
+        concurrency = "3"
     )
     public void consumePostNotification(ConsumerRecord<String, String> message) throws JsonProcessingException {
         PostMessageModel postMessageModel = objectMapper.readValue(message.value(), PostMessageModel.class);

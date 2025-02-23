@@ -1,7 +1,7 @@
 package com.hopoong.post.api.post.controller;
 
 import com.hopoong.post.api.post.model.PostModel;
-import com.hopoong.post.api.post.service.PostUsecase;
+import com.hopoong.post.api.post.service.PostService;
 import com.hopoong.post.response.CommonResponseCodeEnum;
 import com.hopoong.post.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostUsecase postService;
+    private final PostService postService;
 
     @PostMapping
     public SuccessResponse createPost(@RequestBody PostModel.CreateRequest request) {

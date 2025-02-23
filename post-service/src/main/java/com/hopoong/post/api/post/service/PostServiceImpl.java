@@ -12,7 +12,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class PostUsecaseImpl implements PostUsecase {
+public class PostServiceImpl implements PostService {
 
     private final ApplicationEventPublisher eventPublisher;
     private final PostJpaRepository postJpaRepository;

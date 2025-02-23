@@ -31,12 +31,17 @@ spring:
     username: root
     password: localpw
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+      hibernate.jdbc.batch_size: 300
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+#      hibernate.generate_statistics: true
 
   data:
     redis:
@@ -44,3 +49,9 @@ spring:
       port: 6379
       timeout: 60000
       connect-timeout: 60000
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ruser
+    password: localpw
