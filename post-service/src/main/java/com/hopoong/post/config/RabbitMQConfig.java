@@ -1,6 +1,6 @@
 package com.hopoong.post.config;
 
-import com.hopoong.core.topic.RabbitmqTopic;
+import com.hopoong.core.topic.RabbitMQExchangeManager;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -55,7 +55,7 @@ public class RabbitMQConfig {
 
     @Bean
     public FanoutExchange fanoutExchange() {
-        return new FanoutExchange(RabbitmqTopic.COMMENT);
+        return new FanoutExchange(RabbitMQExchangeManager.COMMENT);
     }
 
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.model.PopularPostModel;
-import com.hopoong.core.topic.KafkaTopic;
+import com.hopoong.core.topic.KafkaTopicManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -28,7 +28,7 @@ public class KafkaConsumer {
 
     // case 2 ::: 1000건씩 나누어 처리
     @KafkaListener(
-            topics = KafkaTopic.BATCH_POPULAR_POSTS,
+            topics = KafkaTopicManager.BATCH_POPULAR_POSTS,
             groupId = "is-batch",
             containerFactory = "kafkaBatchListenerContainerFactory",
             concurrency = "3"

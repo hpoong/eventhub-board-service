@@ -1,6 +1,6 @@
 package com.hopoong.core.topic;
 
-public class KafkaTopic {
+public class KafkaTopicManager {
 
     public static final String POST = "post-topic";
     public static final String LIKE = "like-topic";

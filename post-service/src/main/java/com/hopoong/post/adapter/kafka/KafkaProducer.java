@@ -3,7 +3,7 @@ package com.hopoong.post.adapter.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.hopoong.core.topic.KafkaTopic;
+import com.hopoong.core.topic.KafkaTopicManager;
 import com.hopoong.post.api.popularpost.model.PopularPostModel;
 import com.hopoong.post.api.post.model.PostModel;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class KafkaProducer {
     private final ObjectMapper objectMapper;
 
     public void publishPostEvent(PostModel.CreateRequest message) throws JsonProcessingException {
-        kafkaTemplate.send(KafkaTopic.POST, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(message));
+        kafkaTemplate.send(KafkaTopicManager.POST, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(message));
     }
 
     public void publishPopularPostsEvent(List<PopularPostModel.TrendingPostModel> message) {
@@ -31,7 +31,7 @@ public class KafkaProducer {
         List<List<PopularPostModel.TrendingPostModel>> partitions = Lists.partition(message, 1000);
         partitions.stream().forEach(data -> {
             try {
-                kafkaTemplate.send(KafkaTopic.BATCH_POPULAR_POSTS, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(data));
+                kafkaTemplate.send(KafkaTopicManager.BATCH_POPULAR_POSTS, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(data));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

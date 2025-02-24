@@ -17,9 +17,9 @@ public class CommentController {
     private final CommentService commentService;
 
 
-    @GetMapping("/{test}")
-    public SuccessResponse test(@PathVariable String test) {
-        commentService.test(test);
+    @GetMapping("/{comment}")
+    public SuccessResponse test(@PathVariable String comment) {
+        commentService.saveComment(comment);
         return new SuccessResponse(CommonResponseCodeEnum.SERVER, null);
     }
 

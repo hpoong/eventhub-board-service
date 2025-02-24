@@ -3,7 +3,7 @@ package com.hopoong.notification.adapter.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.model.PostMessageModel;
-import com.hopoong.core.topic.KafkaTopic;
+import com.hopoong.core.topic.KafkaTopicManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,7 +19,7 @@ public class KafkaConsumer {
 
 
     @KafkaListener(
-        topics = KafkaTopic.LIKE,
+        topics = KafkaTopicManager.LIKE,
         groupId = "like-topic-notification-group",
         concurrency = "3"
     )
@@ -29,7 +29,7 @@ public class KafkaConsumer {
 
 
     @KafkaListener(
-        topics = KafkaTopic.POST,
+        topics = KafkaTopicManager.POST,
         groupId = "post-topic-notification-group",
         concurrency = "3"
     )

@@ -1,5 +1,6 @@
 package com.hopoong.post.api.comment.service;
 
+import com.hopoong.core.model.PopularPostModel;
 import com.hopoong.post.event.CommentEventHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,22 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void test(String message) {
-        commentEventHandler.handleCommentEvent(message);
+
     }
+
+    @Override
+    public void saveComment(String comment) {
+
+
+
+
+
+
+
+
+
+        commentEventHandler.handleCommentEvent(new PopularPostModel.CommentRabbitMQModel());
+    }
+
+
 }
