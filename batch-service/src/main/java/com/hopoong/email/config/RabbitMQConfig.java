@@ -1,7 +1,5 @@
-package com.hopoong.notification.config;
+package com.hopoong.email.config;
 
-import com.hopoong.core.topic.RabbitMQExchangeManager;
-import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -52,9 +50,4 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
-
-    @Bean
-    public FanoutExchange fanoutExchange() {
-        return new FanoutExchange(RabbitMQExchangeManager.COMMENT);
-    }
 }

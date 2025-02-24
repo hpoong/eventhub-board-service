@@ -16,20 +16,26 @@ public class PostController {
 
     @PostMapping
     public SuccessResponse createPost(@RequestBody PostModel.CreateRequest request) {
-        postService.create(request);
+        postService.createPost(request);
         return new SuccessResponse(CommonResponseCodeEnum.SERVER, "Post successfully created");
     }
 
-    @PutMapping("/{postId}")
-    public SuccessResponse updatePost(@PathVariable Long postId, @RequestBody PostModel.UpdateRequest request) {
-        postService.update(PostModel.UpdateRequest.withId(postId, request));
-        return new SuccessResponse(CommonResponseCodeEnum.SERVER, "Post successfully updated");
+    @GetMapping("/{postId}")
+    public SuccessResponse findPostById(@PathVariable Long postId) {
+        postService.findPostById(postId);
+        return new SuccessResponse(CommonResponseCodeEnum.SERVER, null);
     }
 
-    @DeleteMapping("/{postId}")
-    public SuccessResponse deletePost(@PathVariable Long postId) {
-        postService.delete(postId);
-        return new SuccessResponse(CommonResponseCodeEnum.SERVER, "Post successfully deleted");
+    @GetMapping("/posts/{postId}/comments")
+    public SuccessResponse addComment(@PathVariable Long postId) {
+        postService.addComment(postId);
+        return new SuccessResponse(CommonResponseCodeEnum.SERVER, null);
     }
 
+
+    @GetMapping("/posts/{postId}/like")
+    public SuccessResponse likePost(@PathVariable Long postId) {
+        postService.likePost(postId);
+        return new SuccessResponse(CommonResponseCodeEnum.SERVER, null);
+    }
 }

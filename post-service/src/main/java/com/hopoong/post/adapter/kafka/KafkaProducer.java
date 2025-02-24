@@ -20,10 +20,16 @@ public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
+    /*
+     * 알람 / 이메일 publish ::: 글 등록
+     */
     public void publishPostEvent(PostModel.CreateRequest message) throws JsonProcessingException {
         kafkaTemplate.send(KafkaTopicManager.POST, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(message));
     }
 
+    /*
+     * 배치 publish ::: 카테고리 별 인기글 등록
+     */
     public void publishPopularPostsEvent(List<PopularPostModel.TrendingPostModel> message) {
 
 

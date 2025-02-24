@@ -14,6 +14,9 @@ public class PopularPostEventHandler {
 
     private final KafkaProducer kafkaProducer;
 
+    /*
+     * 카테고리 별 인기글 등록
+     */
     public void handleFetchPopularPostsEvent(List<PopularPostModel.TrendingPostModel> message) {
         kafkaProducer.publishPopularPostsEvent(message);
     }

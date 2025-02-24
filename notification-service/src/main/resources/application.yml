@@ -27,4 +27,3 @@ spring:
     port: 5672
     username: ruser
     password: localpw
-    vhost: legacy

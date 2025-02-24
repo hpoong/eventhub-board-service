@@ -53,9 +53,4 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
-    @Bean
-    public FanoutExchange fanoutExchange() {
-        return new FanoutExchange(RabbitMQExchangeManager.COMMENT);
-    }
-
 }

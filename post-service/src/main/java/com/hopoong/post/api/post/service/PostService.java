@@ -3,11 +3,13 @@ package com.hopoong.post.api.post.service;
 import com.hopoong.post.api.post.model.PostModel;
 
 public interface PostService {
-    void create(PostModel.CreateRequest createRequest);
+    void createPost(PostModel.CreateRequest createRequest);
 
-    void update(PostModel.UpdateRequest updateRequest);
+    void findPostById(Long postId);
 
-    void delete(Long postId);
+    void addComment(Long postId);
+
+    void likePost(Long postId);
 }
 
 
