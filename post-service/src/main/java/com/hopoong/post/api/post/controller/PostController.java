@@ -32,7 +32,6 @@ public class PostController {
         return new SuccessResponse(CommonResponseCodeEnum.SERVER, null);
     }
 
-
     @GetMapping("/posts/{postId}/like")
     public SuccessResponse likePost(@PathVariable Long postId) {
         postService.likePost(postId);

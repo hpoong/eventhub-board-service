@@ -4,6 +4,7 @@ import com.hopoong.post.api.popularpost.model.PopularPostModel;
 import com.hopoong.post.api.post.repository.PostJpaRepository;
 import com.hopoong.post.domain.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +22,8 @@ public class PopularPostService {
 
     private final PostJpaRepository postJpaRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final PopularPostRedisService postRedisService;
+
 
     private static final String POPULAR_POSTS_KEY = "popular_posts"; // Redis Key
     private static final Duration CACHE_TTL = Duration.ofMinutes(45);
@@ -55,6 +59,14 @@ public class PopularPostService {
 
     public List<PopularPostModel.TrendingPostModel> getPopularPostsFromCache() {
         return (List<PopularPostModel.TrendingPostModel>) redisTemplate.opsForValue().get(POPULAR_POSTS_KEY);
+    }
+
+    /*
+     * 실시간 인기 게시글
+     */
+    public List<Post> getRealTimeTopPopularPosts(int limit) {
+        List<Long> topPopularPostIds = postRedisService.getTopRealTimePopularPosts(limit);
+        return postJpaRepository.findAllById(topPopularPostIds);
     }
 
 

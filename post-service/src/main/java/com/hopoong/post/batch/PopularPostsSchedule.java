@@ -1,21 +1,21 @@
 package com.hopoong.post.batch;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hopoong.post.api.popularpost.model.PopularPostModel;
 import com.hopoong.post.api.popularpost.service.PopularPostService;
+import com.hopoong.post.api.popularpost.service.PopularPostRedisService;
 import com.hopoong.post.event.PopularPostEventHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PopularPostsSchedule {
 
     private final PopularPostService popularPostService;
     private final PopularPostEventHandler popularPostEventHandler;
+    private final PopularPostRedisService popularPostRedisService;
 
 //    /**
 //     * ✅ 10분마다 인기 게시글을 조회하여 DB에 저장
@@ -33,6 +33,18 @@ public class PopularPostsSchedule {
 //    public void updatePopularPostsCache() {
 //        popularPostService.cachePopularPosts();
 //    }
+
+
+//    /*
+//     * 30분 마다 인기글 초기화
+//     */
+//    @Scheduled(fixedRate = 1800000)
+//    public void resetPopularPostRanking() {
+//        log.info("실시간 인기글 배치 실행");
+//        popularPostRedisService.initRealTimePopularPostCount();
+//    }
+
+
 
 }
 

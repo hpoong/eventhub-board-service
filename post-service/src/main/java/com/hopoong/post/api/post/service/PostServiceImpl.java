@@ -1,6 +1,7 @@
 package com.hopoong.post.api.post.service;
 
 import com.hopoong.core.model.PopularPostModel;
+import com.hopoong.post.api.popularpost.service.PopularPostRedisService;
 import com.hopoong.post.api.post.model.PostModel;
 import com.hopoong.post.api.post.repository.PostJpaRepository;
 import com.hopoong.post.domain.Post;
@@ -19,6 +20,7 @@ public class PostServiceImpl implements PostService {
     private final ApplicationEventPublisher eventPublisher;
     private final PostJpaRepository postJpaRepository;
     private final PostEventHandler postEventHandler;
+    private final PopularPostRedisService popularPostRedisService;
 
 
     @Override
@@ -34,17 +36,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public void findPostById(Long postId) {
         postEventHandler.handlePostCountEvent("VIEWED", new PopularPostModel.CommentRabbitMQModel());
+        popularPostRedisService.incrementRealTimePopularPostCount(postId);
+
     }
 
     @Override
     public void addComment(Long postId) {
         postEventHandler.handlePostCountEvent("COMMENT", new PopularPostModel.CommentRabbitMQModel());
+        popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
 
     @Override
     public void likePost(Long postId) {
         postEventHandler.handlePostCountEvent("LIKED", new PopularPostModel.CommentRabbitMQModel());
+        popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
-
 
 }
