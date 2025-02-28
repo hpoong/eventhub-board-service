@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -35,21 +36,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void findPostById(Long postId) {
-        postEventHandler.handlePostCountEvent("VIEWED", new PopularPostModel.CommentRabbitMQModel());
+        postEventHandler.handlePostCountEvent("VIEWED", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
 
     }
 
     @Override
     public void addComment(Long postId) {
-        postEventHandler.handlePostCountEvent("COMMENT", new PopularPostModel.CommentRabbitMQModel());
+        postEventHandler.handlePostCountEvent("COMMENT", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
 
     @Override
     public void likePost(Long postId) {
-        postEventHandler.handlePostCountEvent("LIKED", new PopularPostModel.CommentRabbitMQModel());
+        postEventHandler.handlePostCountEvent("LIKED", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
+
+    public static long getRandomLong() {
+        return ThreadLocalRandom.current().nextLong(1, 11);
+    }
+
 
 }

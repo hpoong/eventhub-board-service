@@ -10,23 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQTopologyConfig {
+public class RabbitMQUserBehaviorConfig {
+
+    /*
+     * 사용자 행동 패턴 Service
+     */
 
     // Direct Exchange 설정
     @Bean
-    public DirectExchange directCommentExchange() {
-        return new DirectExchange(RabbitMQExchangeManager.COMMENT);
+    public DirectExchange directUserBehaviorExchange() {
+        return new DirectExchange(RabbitMQExchangeManager.BEHAVIOR);
     }
 
-    @Bean
-    public DirectExchange directLikedExchange() {
-        return new DirectExchange(RabbitMQExchangeManager.LIKED);
-    }
-
-    @Bean
-    public DirectExchange directViewedExchange() {
-        return new DirectExchange(RabbitMQExchangeManager.VIEWED);
-    }
 
     // Durable 큐 설정 (메시지 유실 방지)
     @Bean
@@ -44,26 +39,28 @@ public class RabbitMQTopologyConfig {
         return new Queue(RabbitMQQueueManager.VIEWED, true);
     }
 
+
+
     // Exchange <-> Queue 바인딩 (DirectExchange + Routing Key 설정)
     @Bean
-    public Binding bindingCommentExchange(DirectExchange directCommentExchange, Queue postCommentsAggregationQueue) {
+    public Binding bindingCommentExchange(DirectExchange directUserBehaviorExchange, Queue postCommentsAggregationQueue) {
         return BindingBuilder.bind(postCommentsAggregationQueue)
-                .to(directCommentExchange)
-                .with("aggregation.count");
+                .to(directUserBehaviorExchange)
+                .with("comments.behavior");
     }
 
     @Bean
-    public Binding bindingLikedExchange(DirectExchange directLikedExchange, Queue postLikedAggregationQueue) {
+    public Binding bindingLikedExchange(DirectExchange directUserBehaviorExchange, Queue postLikedAggregationQueue) {
         return BindingBuilder.bind(postLikedAggregationQueue)
-                .to(directLikedExchange)
-                .with("aggregation.count");
+                .to(directUserBehaviorExchange)
+                .with("liked.behavior");
     }
 
     @Bean
-    public Binding bindingViewedExchange(DirectExchange directViewedExchange, Queue postViewedAggregationQueue) {
+    public Binding bindingViewedExchange(DirectExchange directUserBehaviorExchange, Queue postViewedAggregationQueue) {
         return BindingBuilder.bind(postViewedAggregationQueue)
-                .to(directViewedExchange)
-                .with("aggregation.count");
+                .to(directUserBehaviorExchange)
+                .with("viewed.behavior");
     }
 
 }

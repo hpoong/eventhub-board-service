@@ -1,5 +1,7 @@
 package com.hopoong.post.api.popularpost.service;
 
+import com.hopoong.post.domain.Post;
+
 import java.util.List;
 
 public interface PopularPostRedisService {
@@ -9,6 +11,11 @@ public interface PopularPostRedisService {
     List<Long> getTopRealTimePopularPosts(int limit);
 
     void initRealTimePopularPostCount();
+
+    List<Post> getPostsFromCache(List<Long> topPopularPostIds);
+
+    void savePostsToCache(List<Post> dbPosts);
+
 }
 
 

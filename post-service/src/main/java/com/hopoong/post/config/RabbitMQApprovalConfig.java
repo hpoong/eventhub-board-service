@@ -1,4 +1,4 @@
-package com.hopoong.email.config;
+package com.hopoong.post.config;
 
 import com.hopoong.core.topic.RabbitMQExchangeManager;
 import com.hopoong.core.topic.RabbitMQQueueManager;
@@ -10,11 +10,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQTopologyConfig {
+public class RabbitMQApprovalConfig {
+
+    /*
+     * 사용자 행동 패턴 Service 
+     */
 
     // Direct Exchange 설정
     @Bean
-    public DirectExchange directCommentExchange() {
+    public DirectExchange directUserBehaviorExchange() {
         return new DirectExchange(RabbitMQExchangeManager.BEHAVIOR);
     }
 
@@ -39,23 +43,24 @@ public class RabbitMQTopologyConfig {
 
     // Exchange <-> Queue 바인딩 (DirectExchange + Routing Key 설정)
     @Bean
-    public Binding bindingCommentExchange(DirectExchange directCommentExchange, Queue postCommentsAggregationQueue) {
+    public Binding bindingCommentExchange(DirectExchange directUserBehaviorExchange, Queue postCommentsAggregationQueue) {
         return BindingBuilder.bind(postCommentsAggregationQueue)
-                .to(directCommentExchange)
+                .to(directUserBehaviorExchange)
                 .with("comments.behavior");
     }
 
     @Bean
-    public Binding bindingLikedExchange(DirectExchange directCommentExchange, Queue postLikedAggregationQueue) {
+    public Binding bindingLikedExchange(DirectExchange directUserBehaviorExchange, Queue postLikedAggregationQueue) {
         return BindingBuilder.bind(postLikedAggregationQueue)
-                .to(directCommentExchange)
+                .to(directUserBehaviorExchange)
                 .with("liked.behavior");
     }
 
     @Bean
-    public Binding bindingViewedExchange(DirectExchange directCommentExchange, Queue postViewedAggregationQueue) {
+    public Binding bindingViewedExchange(DirectExchange directUserBehaviorExchange, Queue postViewedAggregationQueue) {
         return BindingBuilder.bind(postViewedAggregationQueue)
-                .to(directCommentExchange)
+                .to(directUserBehaviorExchange)
                 .with("viewed.behavior");
     }
+
 }

@@ -17,9 +17,9 @@ public class RabbitmqProducer {
      */
     public void publishPostCountEvent(String type, PopularPostModel.CommentRabbitMQModel message) {
         switch (type) {
-            case "COMMENT" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.COMMENT, "popular.post.count", message);
-            case "LIKED" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.LIKED, "popular.post.count", message);
-            case "VIEWED" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.VIEWED, "popular.post.count", message);
+            case "COMMENT" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.BEHAVIOR, "comments.behavior", message);
+            case "LIKED" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.BEHAVIOR, "liked.behavior", message);
+            case "VIEWED" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.BEHAVIOR, "viewed.behavior", message);
         }
     }
 
