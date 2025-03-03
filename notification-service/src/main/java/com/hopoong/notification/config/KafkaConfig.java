@@ -77,7 +77,7 @@ public class KafkaConfig {
         );
         defaultErrorHandler.addNotRetryableExceptions(IllegalArgumentException.class);
         defaultErrorHandler.setRetryListeners((record, ex, deliveryAttempt) -> {
-            System.err.println("❌ 메시지 재시도 [" + deliveryAttempt + "]회 실패: " + record.value());
+            System.err.println("메시지 재시도 [" + deliveryAttempt + "]회 실패: " + record.value());
         });
 
         return defaultErrorHandler;

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 @Configuration
-public class RabbitMQWorkFlowConfig {
+public class RabbitMQModerationApprovalConfig {
 
     /*
      * 관리자 승인/검수 Service
@@ -20,7 +20,7 @@ public class RabbitMQWorkFlowConfig {
     // Delayed Exchange (지연 메시지를 지원하는 Exchange)
     @Bean
     public CustomExchange delayedExchange() {
-        return new CustomExchange(RabbitMQExchangeManager.DELAYED_EXCHANGE, "x-delayed-message", true, false,
+        return new CustomExchange(RabbitMQExchangeManager.MODERATION_APPROVAL, "x-delayed-message", true, false,
                 Map.of("x-delayed-type", "direct"));
     }
 

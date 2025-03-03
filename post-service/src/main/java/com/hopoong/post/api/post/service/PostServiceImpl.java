@@ -6,13 +6,13 @@ import com.hopoong.post.api.post.model.PostModel;
 import com.hopoong.post.api.post.repository.PostJpaRepository;
 import com.hopoong.post.domain.Post;
 import com.hopoong.post.event.PostEventHandler;
+import com.hopoong.post.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -36,26 +36,20 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void findPostById(Long postId) {
-        postEventHandler.handlePostCountEvent("VIEWED", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
+        postEventHandler.handleUserBehaviorEvent("VIEWED", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
 
     }
 
     @Override
     public void addComment(Long postId) {
-        postEventHandler.handlePostCountEvent("COMMENT", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
+        postEventHandler.handleUserBehaviorEvent("COMMENT", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
 
     @Override
     public void likePost(Long postId) {
-        postEventHandler.handlePostCountEvent("LIKED", new PopularPostModel.CommentRabbitMQModel(postId, getRandomLong()));
+        postEventHandler.handleUserBehaviorEvent("LIKED", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
-
-    public static long getRandomLong() {
-        return ThreadLocalRandom.current().nextLong(1, 11);
-    }
-
-
 }

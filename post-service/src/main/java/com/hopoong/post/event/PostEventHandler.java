@@ -29,9 +29,9 @@ public class PostEventHandler {
     }
 
     /*
-     * 인기글 집계 (조회, 댓글, 좋아요)
+     * 사용자 행동 패턴 (조회, 댓글, 좋아요)
      */
-    public void handlePostCountEvent(String type, PopularPostModel.CommentRabbitMQModel message) {
-        rabbitmqProducer.publishPostCountEvent(type, message);
+    public void handleUserBehaviorEvent(String type, PopularPostModel.PostUserBehaviorMessageModel message) {
+        rabbitmqProducer.publishPostUserBehaviorEvent(type, message);
     }
 }

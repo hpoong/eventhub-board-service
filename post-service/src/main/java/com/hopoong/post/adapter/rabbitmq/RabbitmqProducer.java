@@ -13,9 +13,9 @@ public class RabbitmqProducer {
     private final RabbitTemplate rabbitTemplate;
 
     /*
-     * 집계 publish ::: 댓글 / 좋아요 / 조회
+     * 사용자 행동 패턴 publish ::: 댓글 / 좋아요 / 조회
      */
-    public void publishPostCountEvent(String type, PopularPostModel.CommentRabbitMQModel message) {
+    public void publishPostUserBehaviorEvent(String type, PopularPostModel.PostUserBehaviorMessageModel message) {
         switch (type) {
             case "COMMENT" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.BEHAVIOR, "comments.behavior", message);
             case "LIKED" -> rabbitTemplate.convertAndSend(RabbitMQExchangeManager.BEHAVIOR, "liked.behavior", message);

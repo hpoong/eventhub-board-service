@@ -34,17 +34,17 @@ public class KafkaConsumer {
             concurrency = "3"
     )
     public void isBatch(List<ConsumerRecord<String, String>> messages) throws JsonProcessingException {
-        List<PopularPostModel.TrendingPostModel> allTrendingPosts = new ArrayList<>();
+        List<PopularPostModel.TrendingPostMessageModel> allTrendingPosts = new ArrayList<>();
 
         for (ConsumerRecord<String, String> message : messages) {
-            List<PopularPostModel.TrendingPostModel> trendingPosts = objectMapper.readValue(
+            List<PopularPostModel.TrendingPostMessageModel> trendingPosts = objectMapper.readValue(
                     message.value(),
-                    new TypeReference<List<PopularPostModel.TrendingPostModel>>() {}
+                    new TypeReference<List<PopularPostModel.TrendingPostMessageModel>>() {}
             );
             allTrendingPosts.addAll(trendingPosts);
         }
 
-        log.info("📢 인기 게시글 알림 (배치 처리): {}개 메시지, 총 {}개 데이터", messages.size(), allTrendingPosts.size());
+        log.info("인기 게시글 알림 (배치 처리): {}개 메시지, 총 {}개 데이터", messages.size(), allTrendingPosts.size());
     }
 
 
@@ -67,7 +67,7 @@ public class KafkaConsumer {
 //            allTrendingPosts.add(trendingPosts);
 //        }
 //
-//        log.info("📢 인기 게시글 알림 (배치 처리): {}개 메시지, 총 {}개 데이터", messages.size(), allTrendingPosts.size());
+//        log.info("인기 게시글 알림 (배치 처리): {}개 메시지, 총 {}개 데이터", messages.size(), allTrendingPosts.size());
 //    }
 
 

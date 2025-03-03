@@ -28,7 +28,7 @@ public class PopularPostRabbitMQServiceImpl implements PopularPostRabbitMQServic
         while (true) {
             int count = 0;
             while (count < BATCH_SIZE) { // BATCH_SIZE 개씩 처리
-                PopularPostModel.CommentRabbitMQModel message = (PopularPostModel.CommentRabbitMQModel) rabbitTemplate.receiveAndConvert(queueName);
+                PopularPostModel.PostUserBehaviorMessageModel message = (PopularPostModel.PostUserBehaviorMessageModel) rabbitTemplate.receiveAndConvert(queueName);
                 if (message == null) {
                     break; // 메시지가 없으면 현재 배치 종료
                 }
