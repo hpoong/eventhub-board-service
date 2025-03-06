@@ -35,25 +35,25 @@ public class PopularPostsSchedule {
 //    }
 
 
-    /*
-     * 30분 마다 실시간 인기글 초기화
-     */
-    @Scheduled(fixedRate = 1800000)
-    public void resetPopularPostRankingSchedule() {
-        log.info("실시간 인기글 초기화 배치 실행");
-        popularPostRedisService.initRealTimePopularPostCount();
-    }
-
-
-    /*
-     * 1시간 마다 사용자 행동 패턴 게시글 집계 처리
-     */
-//    @Scheduled(fixedRate = 3600000)
-    @Scheduled(fixedRate = 300000) // 5분
-    public void aggregatePostMetricsSchedule() {
-        log.info("사용자 행동 패턴 게시글 집계 처리");
-        popularPostService.aggregatePostMetrics();
-    }
+//    /*
+//     * 30분 마다 실시간 인기글 초기화
+//     */
+//    @Scheduled(fixedRate = 1800000)
+//    public void resetPopularPostRankingSchedule() {
+//        log.info("실시간 인기글 초기화 배치 실행");
+//        popularPostRedisService.initRealTimePopularPostCount();
+//    }
+//
+//
+//    /*
+//     * 1시간 마다 사용자 행동 패턴 게시글 집계 처리
+//     */
+////    @Scheduled(fixedRate = 3600000)
+//    @Scheduled(fixedRate = 300000) // 5분
+//    public void aggregatePostMetricsSchedule() {
+//        log.info("사용자 행동 패턴 게시글 집계 처리");
+//        popularPostService.aggregatePostMetrics();
+//    }
 
 
 

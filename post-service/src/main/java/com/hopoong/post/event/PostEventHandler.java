@@ -5,6 +5,7 @@ import com.hopoong.core.model.PopularPostModel;
 import com.hopoong.post.adapter.kafka.KafkaProducer;
 import com.hopoong.post.adapter.rabbitmq.RabbitmqProducer;
 import com.hopoong.post.api.post.model.PostModel;
+import com.hopoong.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,27 @@ public class PostEventHandler {
     private final RabbitmqProducer rabbitmqProducer;
 
 
+//    /*
+//     * 글 등록시 이벤트
+//     */
+//    @Async
+//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+//    public void handlePostCreateEvent(PostModel.CreateRequest event) throws JsonProcessingException {
+//
+//        // kafka 처리
+//        kafkaProducer.publishPostCreateEvent(event);
+//    }
+
+
     /*
-     * 글 등록
+     * 글 등록시 이벤트
      */
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handlePostEvent(PostModel.CreateRequest event) throws JsonProcessingException {
-        kafkaProducer.publishPostEvent(event);
+    public void handlePostCreateEvent(Post event) throws JsonProcessingException {
+        kafkaProducer.publishPointUpdateEvent(event); // 포인트 적립
     }
+
 
     /*
      * 사용자 행동 패턴 (조회, 댓글, 좋아요)

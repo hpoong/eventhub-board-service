@@ -31,25 +31,36 @@ public class PostServiceImpl implements PostService {
         int randomNumber = random.nextInt(100000) + 1;
         Post postEntity = Post.createPost(createRequest.userId(), createRequest.title(), createRequest.content(), createRequest.categoryId(), randomNumber);
         postJpaRepository.save(postEntity);
-        eventPublisher.publishEvent(createRequest);
+
+        // kafka ::: 포인트 등록
+        eventPublisher.publishEvent(postEntity);
     }
 
     @Override
     public void findPostById(Long postId) {
+        // rabbitMQ ::: 사용자 행동 패턴
         postEventHandler.handleUserBehaviorEvent("VIEWED", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
+
+        // redis ::: 인기 게시글
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
 
     }
 
     @Override
     public void addComment(Long postId) {
+        // rabbitMQ ::: 사용자 행동 패턴
         postEventHandler.handleUserBehaviorEvent("COMMENT", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
+
+        // redis ::: 인기 게시글
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
 
     @Override
     public void likePost(Long postId) {
+        // rabbitMQ ::: 사용자 행동 패턴
         postEventHandler.handleUserBehaviorEvent("LIKED", new PopularPostModel.PostUserBehaviorMessageModel(postId, RandomUtil.getRandomUserId()));
+
+        // redis ::: 인기 게시글
         popularPostRedisService.incrementRealTimePopularPostCount(postId);
     }
 }
