@@ -21,18 +21,6 @@ public class KafkaConsumer {
     private final UserService userService;
 
 
-
-    @KafkaListener(
-            topics = KafkaTopicManager.POST_POINT_FAILED,
-            groupId = "post-create-point-failed-group",
-            concurrency = "3"
-    ) //  알람 발송 실패 처리
-    public void publishRollbackPointNotificationEvent(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        PointNotificationMessage pointNotificationMessage = objectMapper.readValue(message.value(), PointNotificationMessage.class);
-        log.info("알람 발송 실패 Consumer ::: {}", pointNotificationMessage);
-    }
-
-
     @KafkaListener(
             topics = KafkaTopicManager.POST_POINT,
             groupId = "post-create-point-group",

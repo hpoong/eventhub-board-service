@@ -2,7 +2,7 @@ services:
   locust-service:
     image: locustio/locust:2.32.0
     command: >
-      -f /mnt/locust/post_view.py --host=http://host.docker.internal:9000
+      -f /mnt/locust/post_create.py --host=http://host.docker.internal:9000
     ports:
       - "8089:8089"
     volumes:

@@ -2,6 +2,7 @@ package com.hopoong.user.event;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hopoong.core.model.post.PointNotificationMessage;
+import com.hopoong.core.model.post.PointUpdateMessage;
 import com.hopoong.user.adapter.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -21,5 +22,9 @@ public class UserEventHandler {
         kafkaProducer.publishPointUpdateNotificationEvent(message);
     }
 
+
+    public void handlePointUpdateFailedEvent(PointUpdateMessage message) throws JsonProcessingException {
+        kafkaProducer.publishPointUpdateFailedEvent(message);
+    }
 
 }

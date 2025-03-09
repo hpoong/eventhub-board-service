@@ -1,5 +1,6 @@
 package com.hopoong.user.api.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hopoong.core.model.post.PointNotificationMessage;
 import com.hopoong.core.model.post.PointUpdateMessage;
 import com.hopoong.user.api.user.model.UserModel;
@@ -63,10 +64,16 @@ public class UserServiceImpl implements UserService {
      * 사용자 포인트 추가 & 알람 설정
      */
     @Transactional
-    public void updatePointWithNotification(PointUpdateMessage pointUpdateMessage) {
-        UserEntity userEntity = self.addUserPoints(pointUpdateMessage.userId(), new UserModel.UserPointUpdateRequest(pointUpdateMessage.point()));
-        PointNotificationMessage pointNotificationMessage = new PointNotificationMessage(pointUpdateMessage.userId(), pointUpdateMessage.postId(), pointUpdateMessage.point(), userEntity.getPoint(), LocalDateTime.now(), "post_created");
-        eventPublisher.publishEvent(pointNotificationMessage);
+    public void updatePointWithNotification(PointUpdateMessage pointUpdateMessage) throws JsonProcessingException {
+        try {
+            throw new RuntimeException("asd");
+//            UserEntity userEntity = self.addUserPoints(pointUpdateMessage.userId(), new UserModel.UserPointUpdateRequest(pointUpdateMessage.point()));
+//            PointNotificationMessage pointNotificationMessage = new PointNotificationMessage(pointUpdateMessage.userId(), pointUpdateMessage.postId(), pointUpdateMessage.point(), userEntity.getPoint(), LocalDateTime.now(), "post_created");
+//            eventPublisher.publishEvent(pointNotificationMessage);
+
+        } catch (Exception e) {
+            userEventHandler.handlePointUpdateFailedEvent(pointUpdateMessage);
+        }
     }
 
 

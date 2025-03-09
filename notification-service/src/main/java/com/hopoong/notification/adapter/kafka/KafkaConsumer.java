@@ -2,7 +2,7 @@ package com.hopoong.notification.adapter.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hopoong.core.model.PostModel;
+import com.hopoong.core.model.notification.PostNotificationMessage;
 import com.hopoong.core.topic.KafkaTopicManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class KafkaConsumer {
         concurrency = "3"
     )
     public void consumePostNotification(ConsumerRecord<String, String> message) throws JsonProcessingException {
-        PostModel.PostNotificationMessageModel postNotificationMessageModel = objectMapper.readValue(message.value(), PostModel.PostNotificationMessageModel.class);
+        PostNotificationMessage postNotificationMessageModel = objectMapper.readValue(message.value(), PostNotificationMessage.class);
         log.info("👍 게시글 알림: {}", postNotificationMessageModel);
     }
 

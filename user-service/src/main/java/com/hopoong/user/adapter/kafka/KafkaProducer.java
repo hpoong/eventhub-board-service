@@ -3,6 +3,7 @@ package com.hopoong.user.adapter.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.model.post.PointNotificationMessage;
+import com.hopoong.core.model.post.PointUpdateMessage;
 import com.hopoong.core.topic.KafkaTopicManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,6 +21,11 @@ public class KafkaProducer {
     // 알람 처리
     public void publishPointUpdateNotificationEvent(PointNotificationMessage message) throws JsonProcessingException {
         kafkaTemplate.send(KafkaTopicManager.POST_POINT_NOTIFICATION, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(message));
+    }
+
+    // 포인트 등록 실패
+    public void publishPointUpdateFailedEvent(PointUpdateMessage message) throws JsonProcessingException {
+        kafkaTemplate.send(KafkaTopicManager.POST_POINT_FAILED, String.valueOf(UUID.randomUUID().toString()), objectMapper.writeValueAsString(message));
     }
 
 }

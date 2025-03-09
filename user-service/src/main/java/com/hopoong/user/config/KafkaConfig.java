@@ -52,7 +52,7 @@ public class KafkaConfig {
     ) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
-        factory.setCommonErrorHandler(kafkaErrorHandler); // 재시도 정책 설정
+//        factory.setCommonErrorHandler(kafkaErrorHandler); // 재시도 정책 설정
         factory.setConcurrency(1);
         return factory;
     }

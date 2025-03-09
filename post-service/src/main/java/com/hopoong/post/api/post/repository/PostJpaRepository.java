@@ -13,8 +13,15 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
     @Query(value = """
         SELECT * FROM (
-            SELECT *, ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY views DESC) AS rn
-            FROM posts
+            SELECT
+               A.id
+             , A.user_id
+             , A.title
+             , A.content
+             , A.category_Id
+             , A.views 
+             , ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY views DESC) AS rn
+            FROM posts A
         ) ranked
         WHERE ranked.rn <= 100
         """, nativeQuery = true)

@@ -1,5 +1,8 @@
 package com.hopoong.post.api.popularpost.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hopoong.core.topic.RedisKeyManager;
 import com.hopoong.post.api.popularpost.model.PopularPostModel;
 import com.hopoong.post.api.post.repository.PostJpaRepository;
 import com.hopoong.post.domain.Post;
@@ -7,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.Duration;
 import java.util.*;
@@ -21,42 +25,86 @@ public class PopularPostService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final PopularPostRedisService postRedisService;
     private final PopularPostRabbitMQService popularPostRabbitMQService;
+    private final ObjectMapper objectMapper;
 
-
-    private static final String POPULAR_POSTS_KEY = "popular_posts"; // Redis Key
     private static final Duration CACHE_TTL = Duration.ofMinutes(45);
 
 
+
+    /*
+     * 카테고리 별 인기글 조회
+     */
     @Transactional(readOnly = true)
     public List<PopularPostModel.TrendingPostModel> findTop100ByOrderByViewsDesc() {
         List<Object[]> top100ByOrderByViewsDesc = postJpaRepository.findTop100ByOrderByViewsDesc();
 
-        // id 0; category_id 1; content 2; created_at 3; title 4; updated_at 5; user_id 6; views 7; rn 8
         return Optional.ofNullable(top100ByOrderByViewsDesc)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .map(row -> new PopularPostModel.TrendingPostModel(
                         ((Number) row[0]).longValue(),   // id
-                        ((Number) row[6]).longValue(),   // userId
-                        (String) row[4],                 // title
-                        (String) row[2],                 // content
-                        ((Number) row[1]).longValue(),   // categoryId
-                        ((Number) row[7]).intValue(),    // views
-                        ((Number) row[8]).longValue()    // rn
+                        ((Number) row[1]).longValue(),   // userId
+                        (String) row[2],                 // title
+                        (String) row[3],                 // content
+                        ((Number) row[4]).longValue(),   // categoryId
+                        ((Number) row[5]).intValue(),    // views
+                        ((Number) row[6]).longValue()    // rn
                 ))
                 .collect(Collectors.toList());
     }
 
 
 
-    public void cachePopularPosts() {
+    /*
+     * 카테고리 별 인기글 등록
+     */
+    public void saveTrendingPostsByCategory() throws JsonProcessingException {
         List<PopularPostModel.TrendingPostModel> sortedData = this.findTop100ByOrderByViewsDesc();
-        redisTemplate.opsForValue().set(POPULAR_POSTS_KEY, sortedData, CACHE_TTL);
+
+        // Redis에 저장할 데이터 초기화
+        Map<Long, List<PopularPostModel.TrendingPostModel>> categoryPostsMap = new HashMap<>();
+
+        // 카테고리별로 게시글을 그룹화
+        for (PopularPostModel.TrendingPostModel post : sortedData) {
+            categoryPostsMap
+                    .computeIfAbsent(post.categoryId(), k -> new ArrayList<>())
+                    .add(post);
+        }
+
+        // 카테고리별로 Redis 저장
+        for (Map.Entry<Long, List<PopularPostModel.TrendingPostModel>> entry : categoryPostsMap.entrySet()) {
+            String redisKey = RedisKeyManager.POPULAR_POSTS_KEY + entry.getKey();
+
+            redisTemplate.delete(redisKey);
+            redisTemplate.opsForList().rightPushAll(redisKey, objectMapper.writeValueAsString(entry.getValue())); // 리스트 저장
+        }
     }
 
+    /*
+     * 카테고리 별 인기글 조회
+     */
+    public List<PopularPostModel.TrendingPostModel> getTrendingPostsByCategory(Long categoryId) throws JsonProcessingException {
+        String redisKey = RedisKeyManager.POPULAR_POSTS_KEY + categoryId;
 
-    public List<PopularPostModel.TrendingPostModel> getPopularPostsFromCache() {
-        return (List<PopularPostModel.TrendingPostModel>) redisTemplate.opsForValue().get(POPULAR_POSTS_KEY);
+        // Redis에서 데이터 조회 (Object → String 변환)
+        List<Object> cachedData = redisTemplate.opsForList().range(redisKey, 0, -1);
+
+        if (cachedData == null || cachedData.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // JSON → 객체 변환
+        List<PopularPostModel.TrendingPostModel> result = new ArrayList<>();
+        for (Object data : cachedData) {
+            result.addAll(
+                    objectMapper.readValue(
+                            data.toString(),
+                            new TypeReference<List<PopularPostModel.TrendingPostModel>>() {}
+                    )
+            );
+        }
+
+        return result;
     }
 
     /*

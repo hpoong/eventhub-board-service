@@ -1,6 +1,6 @@
 package com.hopoong.post.api.popularpost.service;
 
-import com.hopoong.core.model.PopularPostModel;
+import com.hopoong.core.model.popularpost.PostUserBehaviorMessage;
 import com.hopoong.core.topic.RabbitMQQueueManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -28,7 +28,7 @@ public class PopularPostRabbitMQServiceImpl implements PopularPostRabbitMQServic
         while (true) {
             int count = 0;
             while (count < BATCH_SIZE) { // BATCH_SIZE 개씩 처리
-                PopularPostModel.PostUserBehaviorMessageModel message = (PopularPostModel.PostUserBehaviorMessageModel) rabbitTemplate.receiveAndConvert(queueName);
+                PostUserBehaviorMessage message = (PostUserBehaviorMessage) rabbitTemplate.receiveAndConvert(queueName);
                 if (message == null) {
                     break; // 메시지가 없으면 현재 배치 종료
                 }
