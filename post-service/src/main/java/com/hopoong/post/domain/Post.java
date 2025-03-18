@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -41,7 +43,13 @@ public class Post { //  게시글
     private LocalDateTime updatedAt;
 
 
-    // 게시글 생성 메서드 
+
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PostTag> postTags = new HashSet<>();
+
+    // 게시글 생성 메서드
     public static Post createPost(Long userId, String title, String content, Long categoryId, int views) {
         Post post = new Post();
         post.userId = userId;
