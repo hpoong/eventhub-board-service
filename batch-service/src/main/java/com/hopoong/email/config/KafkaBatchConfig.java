@@ -28,7 +28,7 @@ public class KafkaBatchConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumer().getKeyDeserializer());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumer().getValueDeserializer());
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         // 배치 소비 최적화
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100); // 한 번에 500개 메시지 가져오기

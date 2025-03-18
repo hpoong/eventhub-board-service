@@ -14,7 +14,7 @@ public class MessageUtil {
         return message.stream()
                 .map(data ->
                         new TrendingPostMessage(data.id(), data.userId(), data.title(),
-                                data.content(), data.categoryId(), data.views(), data.rn())
+                                data.content(), data.categoryId(), data.views(), data.rn(), data.retrievedAt())
                 )
                 .collect(Collectors.toList());
     }

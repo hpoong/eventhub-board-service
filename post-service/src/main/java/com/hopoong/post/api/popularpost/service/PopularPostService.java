@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,6 +38,12 @@ public class PopularPostService {
      */
     @Transactional(readOnly = true)
     public List<PopularPostModel.TrendingPostModel> findTop100ByOrderByViewsDesc() {
+
+        // 조회 날짜
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDateTime = now.format(formatter);
+
         List<Object[]> top100ByOrderByViewsDesc = postJpaRepository.findTop100ByOrderByViewsDesc();
 
         return Optional.ofNullable(top100ByOrderByViewsDesc)
@@ -48,7 +56,8 @@ public class PopularPostService {
                         (String) row[3],                 // content
                         ((Number) row[4]).longValue(),   // categoryId
                         ((Number) row[5]).intValue(),    // views
-                        ((Number) row[6]).longValue()    // rn
+                        ((Number) row[6]).longValue(),   // rn
+                        formattedDateTime
                 ))
                 .collect(Collectors.toList());
     }

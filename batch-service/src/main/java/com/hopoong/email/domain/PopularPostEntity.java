@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PopularPost { // 인기 게시글
+public class PopularPostEntity { // 인기 게시글
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,9 @@ public class PopularPost { // 인기 게시글
 
     @Column(nullable = false)
     private Integer postRank;
+
+    @Column(nullable = false, updatable = false)
+    private String retrievedAt;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime cachedAt = LocalDateTime.now();

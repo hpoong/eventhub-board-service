@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.model.popularpost.TrendingPostMessage;
 import com.hopoong.core.topic.KafkaTopicManager;
+import com.hopoong.email.app.popularpost.service.PopularPostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -16,13 +17,13 @@ import java.util.List;
 
 
 
-//consumePopularPostsNotification
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
     private final ObjectMapper objectMapper;
+    private final PopularPostService popularPostService;
 
 
 
@@ -43,6 +44,8 @@ public class KafkaConsumer {
             );
             allTrendingPosts.addAll(trendingPosts);
         }
+
+        popularPostService.savePopularPost(allTrendingPosts);
 
         log.info("인기 게시글 알림 (배치 처리): {}개 메시지, 총 {}개 데이터", messages.size(), allTrendingPosts.size());
     }

@@ -7,7 +7,7 @@ logging:
   config: classpath:logback/logback-srping.xml
   level:
     root: info
-
+    org.springframework.jdbc.core: DEBUG  # JdbcTemplate 로그
 
 spring:
   kafka:
@@ -24,13 +24,13 @@ spring:
       acks: -1
 
   datasource:
-    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/batch_database?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: localpw
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
