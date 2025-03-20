@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     /*
      * 비관적 락
      */
-    @Transactional(readOnly = true)
+    @Transactional
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     public UserEntity getUserByIdWithLock(Long userId) {
         return userEntityJpaRepository.findById(userId)

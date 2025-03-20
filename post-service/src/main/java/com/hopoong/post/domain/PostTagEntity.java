@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "post_tag")
-public class PostTag { // psot - tag 연관 관계
+public class PostTagEntity { // psot - tag 연관 관계
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +18,9 @@ public class PostTag { // psot - tag 연관 관계
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    private PostEntity postEntity;
 
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
-    private Tag tag;
+    private TagEntity tagEntity;
 }

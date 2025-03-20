@@ -1,6 +1,6 @@
 package com.hopoong.post.api.post.repository;
 
-import com.hopoong.post.domain.Post;
+import com.hopoong.post.domain.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostJpaRepository extends JpaRepository<Post, Long> {
+public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
 
     @Query(value = """
@@ -21,7 +21,7 @@ public interface PostJpaRepository extends JpaRepository<Post, Long> {
              , A.category_Id
              , A.views 
              , ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY views DESC) AS rn
-            FROM posts A
+            FROM postEntities A
         ) ranked
         WHERE ranked.rn <= 100
         """, nativeQuery = true)

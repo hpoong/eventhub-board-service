@@ -6,4 +6,8 @@ public class PostModel {
 
     public record DeleteRequest(Long userId, Long postId) {}
 
+    public record CommentsCreateRequest(String content) {}
+
+    public record InfoResponse(Long postId,Long userId, String title, String content, Long categoryId, Integer views) {}
+
 }

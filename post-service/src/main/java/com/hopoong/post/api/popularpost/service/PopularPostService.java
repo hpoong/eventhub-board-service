@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.topic.RedisKeyManager;
 import com.hopoong.post.api.popularpost.model.PopularPostModel;
 import com.hopoong.post.api.post.repository.PostJpaRepository;
-import com.hopoong.post.domain.Post;
+import com.hopoong.post.domain.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,6 @@ public class PopularPostService {
     private final PopularPostRedisService postRedisService;
     private final PopularPostRabbitMQService popularPostRabbitMQService;
     private final ObjectMapper objectMapper;
-
-    private static final Duration CACHE_TTL = Duration.ofMinutes(45);
 
 
 
@@ -119,27 +117,27 @@ public class PopularPostService {
     /*
      * 실시간 인기 게시글
      */
-    public List<Post> getRealTimeTopPopularPosts(int limit) {
+    public List<PostEntity> getRealTimeTopPopularPosts(int limit) {
         List<Long> topPopularPostIds = postRedisService.getTopRealTimePopularPosts(limit);
 
         // Redis에서 먼저 조회
-        List<Post> cachedPosts = postRedisService.getPostsFromCache(topPopularPostIds);
+        List<PostEntity> cachedPostEntities = postRedisService.getPostsFromCache(topPopularPostIds);
 
         // 캐시되지 않은 ID 추출
         List<Long> missingPostIds = topPopularPostIds.stream()
-                .filter(id -> cachedPosts.stream().noneMatch(post -> post.getId().equals(id)))
+                .filter(id -> cachedPostEntities.stream().noneMatch(post -> post.getId().equals(id)))
                 .collect(Collectors.toList());
 
-        List<Post> dbPosts = new ArrayList<>();
+        List<PostEntity> dbPostEntities = new ArrayList<>();
 
         // DB에서 조회 후 Redis에 저장
         if (!missingPostIds.isEmpty()) {
-            dbPosts = postJpaRepository.findAllById(missingPostIds);
-            postRedisService.savePostsToCache(dbPosts);
+            dbPostEntities = postJpaRepository.findAllById(missingPostIds);
+            postRedisService.savePostsToCache(dbPostEntities);
         }
 
         // Redis + DB 결과 합쳐서 반환
-        return Stream.concat(cachedPosts.stream(), dbPosts.stream())
+        return Stream.concat(cachedPostEntities.stream(), dbPostEntities.stream())
                 .collect(Collectors.toList());
     }
 

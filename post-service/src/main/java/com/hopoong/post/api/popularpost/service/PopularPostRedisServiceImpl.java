@@ -2,7 +2,7 @@ package com.hopoong.post.api.popularpost.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.topic.RedisKeyManager;
-import com.hopoong.post.domain.Post;
+import com.hopoong.post.domain.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -49,17 +49,17 @@ public class PopularPostRedisServiceImpl implements PopularPostRedisService {
     }
 
     @Override
-    public List<Post> getPostsFromCache(List<Long> postIds) {
+    public List<PostEntity> getPostsFromCache(List<Long> postIds) {
         return postIds.stream()
                 .map(id -> redisTemplate.opsForValue().get(RedisKeyManager.CACHE_KEY_POST_DETAIL + id))
                 .filter(Objects::nonNull)
-                .map(data -> objectMapper.convertValue(data, Post.class))
+                .map(data -> objectMapper.convertValue(data, PostEntity.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void savePostsToCache(List<Post> posts) {
-        posts.forEach(post -> {
+    public void savePostsToCache(List<PostEntity> postEntities) {
+        postEntities.forEach(post -> {
             redisTemplate.opsForValue().set(RedisKeyManager.CACHE_KEY_POST_DETAIL + post.getId(), post, Duration.ofMinutes(40));
         });
     }

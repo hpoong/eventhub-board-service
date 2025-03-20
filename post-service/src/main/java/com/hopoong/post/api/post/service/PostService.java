@@ -7,9 +7,11 @@ public interface PostService {
 
     void deletePost(PostModel.DeleteRequest deleteRequest);
 
-    void findPostById(Long postId);
+    PostModel.InfoResponse findPostWithTracking(Long postId);
 
-    void addComment(Long postId);
+    PostModel.InfoResponse fetchPost(Long postId);
+
+    void addComment(Long postId, PostModel.CommentsCreateRequest request);
 
     void likePost(Long postId);
 }

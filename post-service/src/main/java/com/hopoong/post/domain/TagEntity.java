@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Table(name = "tag")
-public class Tag { // 태그 정보
+public class TagEntity { // 태그 정보
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,5 @@ public class Tag { // 태그 정보
 
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PostTag> postTags = new HashSet<>();
+    private Set<PostTagEntity> postTagEntities = new HashSet<>();
 }

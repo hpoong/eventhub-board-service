@@ -1,6 +1,6 @@
 package com.hopoong.post.api.popularpost.service;
 
-import com.hopoong.post.domain.Post;
+import com.hopoong.post.domain.PostEntity;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface PopularPostRedisService {
 
     void initRealTimePopularPostCount();
 
-    List<Post> getPostsFromCache(List<Long> topPopularPostIds);
+    List<PostEntity> getPostsFromCache(List<Long> topPopularPostIds);
 
-    void savePostsToCache(List<Post> dbPosts);
+    void savePostsToCache(List<PostEntity> dbPostEntities);
 
 }
 

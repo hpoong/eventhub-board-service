@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment { // 댓글 정보
+public class CommentEntity { // 댓글 정보
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +35,19 @@ public class Comment { // 댓글 정보
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+
+
+
+    public static CommentEntity createCommentEntity(Long postId, Long userId, String content, Long parentCommentId) {
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.postId = postId;
+        commentEntity.userId = userId;
+        commentEntity.content = content;
+        commentEntity.parentCommentId = (parentCommentId != null) ? parentCommentId : 0L;
+        commentEntity.createdAt = LocalDateTime.now();
+        commentEntity.updatedAt = LocalDateTime.now();
+        return commentEntity;
+    }
+
 }

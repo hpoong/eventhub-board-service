@@ -6,7 +6,9 @@ import com.hopoong.core.model.popularpost.PostUserBehaviorMessage;
 import com.hopoong.core.model.post.PointUpdateMessage;
 import com.hopoong.post.adapter.kafka.KafkaProducer;
 import com.hopoong.post.adapter.rabbitmq.RabbitmqProducer;
-import com.hopoong.post.domain.Post;
+import com.hopoong.post.api.post.model.PostEventModel;
+import com.hopoong.post.api.post.service.PostServiceImpl;
+import com.hopoong.post.domain.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,7 @@ public class PostEventHandler {
 
     private final KafkaProducer kafkaProducer;
     private final RabbitmqProducer rabbitmqProducer;
+    private final PostServiceImpl postService;
 
 
     /*
@@ -28,7 +31,7 @@ public class PostEventHandler {
      */
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handlePostCreateEvent(Post event) throws JsonProcessingException {
+    public void handlePostCreateEvent(PostEntity event) throws JsonProcessingException {
 
         // 포인트 적립
         PointUpdateMessage pointUpdateMessage = new PointUpdateMessage(event.getUserId(), event.getId(), 1000L, LocalDateTime.now(), "post_created");
@@ -46,4 +49,15 @@ public class PostEventHandler {
     public void handleUserBehaviorEvent(String type, PostUserBehaviorMessage message) {
         rabbitmqProducer.publishPostUserBehaviorEvent(type, message);
     }
+
+
+    /*
+     * 조회, 댓글, 좋아요 이벤트
+     */
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleTestEvent1(PostEventModel.UserInteractionEvent event) {
+        postService.processUserInteraction(event.type(), event.postId(), event.userId());
+    }
+
 }
