@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
             UserEntityJpaRepository userEntityJpaRepository,
             ApplicationEventPublisher eventPublisher,
             UserEventHandler userEventHandler,
-                       @Lazy UserService self) {
+                       @Lazy UserService self
+    ) {
         this.userEntityJpaRepository = userEntityJpaRepository;
         this.eventPublisher = eventPublisher;
         this.userEventHandler = userEventHandler;
@@ -66,11 +67,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updatePointWithNotification(PointUpdateMessage pointUpdateMessage) throws JsonProcessingException {
         try {
-            throw new RuntimeException("asd");
-//            UserEntity userEntity = self.addUserPoints(pointUpdateMessage.userId(), new UserModel.UserPointUpdateRequest(pointUpdateMessage.point()));
-//            PointNotificationMessage pointNotificationMessage = new PointNotificationMessage(pointUpdateMessage.userId(), pointUpdateMessage.postId(), pointUpdateMessage.point(), userEntity.getPoint(), LocalDateTime.now(), "post_created");
-//            eventPublisher.publishEvent(pointNotificationMessage);
-
+            UserEntity userEntity = self.addUserPoints(pointUpdateMessage.userId(), new UserModel.UserPointUpdateRequest(pointUpdateMessage.point()));
+            PointNotificationMessage pointNotificationMessage = new PointNotificationMessage(pointUpdateMessage.userId(), pointUpdateMessage.postId(), pointUpdateMessage.point(), userEntity.getPoint(), LocalDateTime.now(), "post_created");
+            eventPublisher.publishEvent(pointNotificationMessage);
         } catch (Exception e) {
             userEventHandler.handlePointUpdateFailedEvent(pointUpdateMessage);
         }

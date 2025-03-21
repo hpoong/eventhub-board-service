@@ -45,7 +45,7 @@ public class PostEntity { //  게시글
 
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostTagEntity> postTagEntities = new HashSet<>();
 
 

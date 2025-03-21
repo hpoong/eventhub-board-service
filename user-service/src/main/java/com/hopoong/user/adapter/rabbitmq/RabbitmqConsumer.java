@@ -1,27 +1,21 @@
-package com.hopoong.post.api.popularpost.service;
+package com.hopoong.user.adapter.rabbitmq;
 
 import com.hopoong.core.model.popularpost.PostUserBehaviorMessage;
-import com.hopoong.core.topic.RabbitMQQueueManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+@Slf4j
+@Component
 @RequiredArgsConstructor
-@Service
-public class PopularPostRabbitMQServiceImpl implements PopularPostRabbitMQService {
+public class RabbitmqConsumer {
 
     private final RabbitTemplate rabbitTemplate;
     private static final int BATCH_SIZE = 100; // 100개씩 처리
 
-    @Override
-    public void aggregatePostMetrics() {
-        processQueue(RabbitMQQueueManager.COMMENT);
-        processQueue(RabbitMQQueueManager.LIKED);
-        processQueue(RabbitMQQueueManager.VIEWED);
-    }
 
-
-    private void processQueue(String queueName) {
+    public void processQueue(String queueName) {
         System.out.println("▶ 큐 소비 시작: " + queueName);
 
         int totalProcessed = 0;
@@ -49,6 +43,5 @@ public class PopularPostRabbitMQServiceImpl implements PopularPostRabbitMQServic
 
         System.out.println("▶ 큐 소비 완료: " + queueName + " (총 " + totalProcessed + "개 처리)");
     }
-
 
 }

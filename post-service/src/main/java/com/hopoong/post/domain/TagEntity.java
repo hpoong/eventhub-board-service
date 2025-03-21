@@ -24,6 +24,6 @@ public class TagEntity { // 태그 정보
 
 
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tagEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PostTagEntity> postTagEntities = new HashSet<>();
 }

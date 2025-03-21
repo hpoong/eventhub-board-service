@@ -1,6 +1,7 @@
 package com.hopoong.post.api.popularpost.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.core.topic.RedisKeyManager;
 import com.hopoong.post.api.popularpost.model.PopularPostModel;
@@ -10,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -26,7 +25,6 @@ public class PopularPostService {
     private final PostJpaRepository postJpaRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final PopularPostRedisService postRedisService;
-    private final PopularPostRabbitMQService popularPostRabbitMQService;
     private final ObjectMapper objectMapper;
 
 
@@ -140,14 +138,5 @@ public class PopularPostService {
         return Stream.concat(cachedPostEntities.stream(), dbPostEntities.stream())
                 .collect(Collectors.toList());
     }
-
-
-    /*
-     * 1시간 마다 사용자 행동 패턴 게시글 집계 처리
-     */
-    public void aggregatePostMetrics() {
-        popularPostRabbitMQService.aggregatePostMetrics();
-    }
-
 
 }
