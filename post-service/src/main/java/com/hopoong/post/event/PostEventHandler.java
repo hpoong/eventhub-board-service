@@ -6,8 +6,8 @@ import com.hopoong.core.model.popularpost.PostUserBehaviorMessage;
 import com.hopoong.core.model.post.PointUpdateMessage;
 import com.hopoong.post.adapter.kafka.KafkaProducer;
 import com.hopoong.post.adapter.rabbitmq.RabbitmqProducer;
+import com.hopoong.post.api.popularpost.service.PopularPostRedisService;
 import com.hopoong.post.api.post.model.PostEventModel;
-import com.hopoong.post.api.post.service.PostServiceImpl;
 import com.hopoong.post.domain.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -23,8 +23,7 @@ public class PostEventHandler {
 
     private final KafkaProducer kafkaProducer;
     private final RabbitmqProducer rabbitmqProducer;
-    private final PostServiceImpl postService;
-
+    private final PopularPostRedisService popularPostRedisService;
 
     /*
      * 글 등록시 이벤트
@@ -56,8 +55,13 @@ public class PostEventHandler {
      */
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handleTestEvent1(PostEventModel.UserInteractionEvent event) {
-        postService.processUserInteraction(event.type(), event.postId(), event.userId());
+    public void handleUserInteractionEvent(PostEventModel.UserInteractionEvent event) {
+
+        // rabbitMQ ::: 사용자 행동 패턴
+        this.handleUserBehaviorEvent(event.type(), new PostUserBehaviorMessage(event.postId(), event.userId()));
+
+        // redis ::: 인기 게시글
+        popularPostRedisService.incrementRealTimePopularPostCount(event.postId());
     }
 
 }
